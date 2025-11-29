@@ -2,25 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tiempo Meira - Ajuste Vertical</title>
+    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+    <title>Tiempo Meira - Estructura Fija</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap" rel="stylesheet">
 
     <style>
+        /* RESET TOTAL */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
             font-family: 'Outfit', sans-serif;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden; 
+            height: 1920px;
+            width: 1080px;
+            overflow: hidden; /* Cortamos lo que sobre, pero calcularemos para que no sobre nada */
             color: #ffffff;
             background-color: #222;
             
-            /* IMAGEN DE FONDO */
+            /* IMAGEN FONDO */
             background-image: url('fondo.jpg'); 
             background-repeat: no-repeat;
             background-size: cover; 
@@ -28,145 +28,108 @@
         }
 
         .overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.9) 100%);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.9) 100%);
             z-index: 1;
         }
 
+        /* CONTENEDOR PRINCIPAL - ESTRATEGIA FLEXBOX VERTICAL ESTRICTA */
         .container {
             position: relative;
             z-index: 2;
-            height: 100%;
             width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            /* Reducimos un poco el padding vertical para ganar espacio */
-            padding: 3vh 5vw; 
-            box-sizing: border-box;
-            justify-content: space-between; /* Distribuye elementos arriba y abajo */
+            padding: 40px 60px; /* Márgenes laterales seguros */
         }
 
-        /* --- HEADER --- */
+        /* 1. SECCIÓN HEADER (12% ALTURA) */
         header {
+            height: 12%; 
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding-bottom: 1.5vh;
-            flex-shrink: 0; /* No encoger */
         }
-        .location h1 {
-            margin: 0;
-            font-size: 4.5vh; /* Un pelín más pequeño */
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-            line-height: 1;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-        .location p {
-            margin: 0.5vh 0 0;
-            font-size: 2vh;
-            opacity: 0.9;
-            font-weight: 200;
-        }
-        .clock { text-align: right; }
-        .time {
-            font-size: 4.5vh;
-            font-weight: 200;
-            line-height: 1;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-        .date {
-            font-size: 1.6vh;
-            opacity: 0.9;
-            text-transform: uppercase;
-            margin-top: 0.5vh;
-        }
+        .location h1 { font-size: 80px; font-weight: 700; margin: 0; line-height: 1; }
+        .location p { font-size: 35px; margin: 5px 0 0; opacity: 0.9; font-weight: 200; }
+        .time { font-size: 80px; font-weight: 200; line-height: 1; text-align: right; }
+        .date { font-size: 28px; text-transform: uppercase; margin-top: 5px; text-align: right; opacity: 0.9; }
 
-        /* --- HERO (Temperatura) --- */
-        /* AQUÍ ESTABA EL PROBLEMA: Era demasiado grande */
+        /* 2. SECCIÓN HERO (33% ALTURA) - Reducida para que quepa lo de abajo */
         .hero-weather {
+            height: 33%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-grow: 1; /* Ocupa el espacio libre, pero cede si es necesario */
-            min-height: 0; /* Permite encogerse si falta sitio */
-            margin: 1vh 0;
         }
-        .hero-icon {
-            font-size: 10vh; /* Reducido de 12vh */
-            margin-bottom: 0vh;
-            color: #ffcc00; 
-            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.3));
-        }
-        .hero-temp {
-            font-size: 15vh; /* Reducido de 18vh */
-            font-weight: 700;
-            line-height: 0.9;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .hero-desc {
-            font-size: 3vh;
-            text-transform: capitalize;
-            font-weight: 200;
-            margin-top: 1vh;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
+        /* Ajustamos tamaños para que no empujen */
+        .hero-icon { font-size: 180px; color: #ffcc00; filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.3)); margin-bottom: 10px; }
+        .hero-temp { font-size: 280px; font-weight: 700; line-height: 0.8; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero-desc { font-size: 50px; font-weight: 200; margin-top: 20px; text-transform: capitalize; }
 
-        /* --- GRID DETALLES --- */
+        /* 3. SECCIÓN DETALLES (15% ALTURA) */
         .details-grid {
+            height: 15%;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 2vw;
-            margin-bottom: 2vh;
-            flex-shrink: 0; /* No encoger */
+            gap: 30px;
+            align-content: center; /* Centrar verticalmente */
         }
         .detail-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5vh 0.5vw;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-        .detail-icon { font-size: 2.5vh; margin-bottom: 0.5vh; }
-        .detail-value { font-size: 2.5vh; font-weight: 700; }
-        .detail-label { font-size: 1.2vh; opacity: 0.9; text-transform: uppercase; }
-
-        /* --- FORECAST (Previsión) --- */
-        .forecast-container {
-            background: rgba(0, 0, 0, 0.6); 
             border-radius: 20px;
-            padding: 2vh 4vw;
-            /* CLAVE: Esto asegura que siempre se vea */
-            flex-shrink: 0; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            height: 100%; /* Llenar su hueco */
+        }
+        .detail-icon { font-size: 50px; margin-bottom: 10px; }
+        .detail-value { font-size: 50px; font-weight: 700; }
+        .detail-label { font-size: 24px; opacity: 0.9; text-transform: uppercase; }
+
+        /* 4. SECCIÓN FORECAST (35% ALTURA) - AHORA TIENE ESPACIO RESERVADO */
+        .forecast-container {
+            height: 35%; /* Ocupa el 35% inferior sí o sí */
+            background: rgba(0, 0, 0, 0.6); 
+            border-radius: 30px;
+            padding: 30px;
             border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px; /* Separación extra */
         }
         .forecast-title {
-            font-size: 2vh;
-            margin-bottom: 1vh;
+            font-size: 35px;
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.9;
             border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 0.5vh;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            height: 15%; /* Título ocupa un poco */
+        }
+        #forecast-list {
+            height: 85%; /* La lista ocupa el resto */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Reparte el espacio disponible */
         }
         .forecast-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8vh 0; /* Filas más compactas */
+            font-size: 40px; /* Tamaño letra lista */
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 2vh;
+            height: 20%; /* Cada día ocupa un 20% del espacio disponible */
         }
         .forecast-row:last-child { border-bottom: none; }
         .f-day { width: 35%; text-transform: capitalize; font-weight: 400; }
         .f-icon { width: 20%; text-align: center; color: #eee; }
         .f-temps { width: 45%; text-align: right; font-weight: 700; }
-        .low-temp { opacity: 0.7; font-weight: 200; margin-left: 10px; font-size: 0.9em; }
+        .low-temp { opacity: 0.7; font-weight: 200; margin-left: 15px; font-size: 0.8em; }
 
     </style>
 </head>
