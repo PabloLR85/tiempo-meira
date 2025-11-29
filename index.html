@@ -211,17 +211,32 @@
             } catch(e) { console.error(e); }
         }
 
+        // --- CORRECCIÓN DE ICONOS ---
+        // Ahora distinguimos "Lluvia Fuerte" (80-82) de "Nieve" (71-77, 85-86)
         function getWeatherIcon(c) {
-            if(c===0) return 'fa-sun';
-            if(c<4) return 'fa-cloud-sun';
-            if(c<50) return 'fa-smog';
-            if(c<60) return 'fa-cloud-rain';
-            if(c<80) return 'fa-umbrella';
-            if(c<90) return 'fa-snowflake';
-            return 'fa-bolt';
+            if(c === 0) return 'fa-sun';                       // Despejado
+            if(c >= 1 && c <= 3) return 'fa-cloud-sun';        // Nuboso
+            if(c >= 45 && c <= 48) return 'fa-smog';           // Niebla
+            if(c >= 51 && c <= 67) return 'fa-cloud-rain';     // Lluvia / Llovizna
+            if(c >= 71 && c <= 77) return 'fa-snowflake';      // Nieve Real
+            if(c >= 80 && c <= 82) return 'fa-umbrella';       // Chubascos de LLUVIA (Antes salía nieve aquí)
+            if(c >= 85 && c <= 86) return 'fa-snowflake';      // Chubascos de NIEVE
+            if(c >= 95) return 'fa-bolt';                      // Tormenta
+            return 'fa-cloud';
         }
+
         function getWeatherDesc(c) {
-            const m = {0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto", 45:"Niebla", 61:"Lluvia", 71:"Nieve", 95:"Tormenta"};
+            // Mapeo más preciso
+            const m = {
+                0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto",
+                45:"Niebla", 48:"Niebla escarcha",
+                51:"Llovizna", 53:"Llovizna", 55:"Llovizna",
+                61:"Lluvia", 63:"Lluvia", 65:"Lluvia fuerte",
+                71:"Nieve", 73:"Nieve", 75:"Nieve fuerte",
+                80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes", // Corregido
+                85:"Nieve", 86:"Nieve fuerte",
+                95:"Tormenta", 96:"Tormenta con granizo", 99:"Tormenta fuerte"
+            };
             return m[c] || "Variable";
         }
 
