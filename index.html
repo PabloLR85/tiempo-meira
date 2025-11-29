@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8">
+    <title>Tiempo Meira Digital Signage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&amp;display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            height: 1920px;
+            width: 1080px;
+            overflow: hidden;
+            color: #ffffff;
+            /* Fondo evocador para Galicia (Bosque/Niebla/Naturaleza) */
+            background: url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1080&h=1920&fit=crop') no-repeat center center;
+            background-size: cover;
+        }
+
+        /* Capa oscura para garantizar legibilidad */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 80px 60px; /* Márgenes seguros */
+        }
+
+        /* --- HEADER (Ubicación y Reloj) --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 40px;
+        }
+        .location h1 {
+            margin: 0;
+            font-size: 3.5em;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+        .location p {
+            margin: 10px 0 0;
+            font-size: 1.8em;
+            opacity: 0.8;
+            font-weight: 200;
+        }
+        .clock {
+            text-align: right;
+        }
+        .time {
+            font-size: 4em;
+            font-weight: 200;
+            line-height: 1;
+        }
+        .date {
+            font-size: 1.5em;
+            opacity: 0.7;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* --- HERO (Tiempo Actual) --- */
+        .hero-weather {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 60px 0;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .hero-icon {
+            font-size: 10em;
+            margin-bottom: 20px;
+            color: #ffcc00; /* Color base sol, cambiará via JS si llueve */
+        }
+        .hero-temp {
+            font-size: 14em;
+            font-weight: 700;
+            line-height: 0.9;
+        }
+        .hero-desc {
+            font-size: 3em;
+            text-transform: capitalize;
+            font-weight: 200;
+            margin-top: 20px;
+        }
+
+        /* --- GRID DETALLES (Viento, Humedad) --- */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .detail-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .detail-icon { font-size: 2.5em; margin-bottom: 15px; opacity: 0.9; }
+        .detail-value { font-size: 2.2em; font-weight: 700; }
+        .detail-label { font-size: 1.2em; opacity: 0.7; text-transform: uppercase; margin-top: 5px;}
+
+        /* --- FORECAST (Próximos 5 días) --- */
+        .forecast-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            padding: 40px;
+        }
+        .forecast-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
+        .forecast-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 2em;
+        }
+        .forecast-row:last-child { border-bottom: none; }
+        .f-day { width: 30%; text-transform: capitalize; font-weight: 400; }
+        .f-icon { width: 20%; text-align: center; color: #ddd; }
+        .f-temps { width: 50%; text-align: right; font-weight: 700; }
+        .low-temp { opacity: 0.6; font-weight: 200; margin-left: 15px; font-size: 0.8em; }
+
+    </style>
+<script defer="" data-domain="tiempo-meira.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><meta property="og:url" content="https://tiempo-meira.tiiny.site/" data-id="th-modified"><meta property="og:type" content="website" data-id="th-modified"></head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        
+        <header>
+            <div class="location">
+                <h1>MEIRA</h1>
+                <p>Lugo, Galicia</p>
+            </div>
+            <div class="clock">
+                <div class="time" id="clock-time">--:--</div>
+                <div class="date" id="clock-date">...</div>
+            </div>
+        </header>
+
+        <div class="hero-weather">
+            <div class="hero-icon" id="current-icon"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <div class="hero-temp" id="current-temp">--°</div>
+            <div class="hero-desc" id="current-desc">Cargando datos...</div>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-card">
+                <div class="detail-icon"><i class="fas fa-wind"></i></div>
+                <div class="detail-value" id="wind-speed">--</div>
+                <div class="detail-label">Viento (km/h)</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon"><i class="fas fa-tint"></i></div>
+                <div class="detail-value" id="humidity">--%</div>
+                <div class="detail-label">Humedad</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon"><i class="fas fa-temperature-high"></i></div>
+                <div class="detail-value" id="feels-like">--°</div>
+                <div class="detail-label">Sensación</div>
+            </div>
+        </div>
+
+        <div class="forecast-container">
+            <div class="forecast-title">Próximos 5 días</div>
+            <div id="forecast-list">
+                </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN PARA MEIRA, LUGO ---
+        const LAT = 43.2132;
+        const LON = -7.2934;
+        
+        // Mapeo de códigos WMO a Iconos FontAwesome
+        function getWeatherIcon(code) {
+            // Códigos: https://open-meteo.com/en/docs
+            switch(true) {
+                case (code === 0): return 'fa-sun'; // Despejado
+                case (code >= 1 && code <= 3): return 'fa-cloud-sun'; // Nuboso
+                case (code >= 45 && code <= 48): return 'fa-smog'; // Niebla
+                case (code >= 51 && code <= 55): return 'fa-cloud-rain'; // Llovizna
+                case (code >= 56 && code <= 57): return 'fa-snowflake'; // Lluvia helada
+                case (code >= 61 && code <= 67): return 'fa-umbrella'; // Lluvia
+                case (code >= 71 && code <= 77): return 'fa-snowflake'; // Nieve
+                case (code >= 80 && code <= 82): return 'fa-cloud-showers-heavy'; // Chubascos
+                case (code >= 85 && code <= 86): return 'fa-snowflake'; // Chubascos nieve
+                case (code >= 95): return 'fa-bolt'; // Tormenta
+                default: return 'fa-cloud';
+            }
+        }
+
+        // Mapeo de códigos a Descripción en texto
+        function getWeatherDesc(code) {
+            const descriptions = {
+                0: "Cielo despejado", 1: "Poco nuboso", 2: "Parcialmente nublado", 3: "Nublado",
+                45: "Niebla", 48: "Niebla con escarcha",
+                51: "Llovizna ligera", 53: "Llovizna moderada", 55: "Llovizna densa",
+                61: "Lluvia ligera", 63: "Lluvia moderada", 65: "Lluvia fuerte",
+                71: "Nieve ligera", 73: "Nieve moderada", 75: "Nieve fuerte",
+                95: "Tormenta eléctrica"
+            };
+            return descriptions[code] || "Condiciones variables";
+        }
+
+        // --- RELOJ Y FECHA ---
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            
+            document.getElementById('clock-time').innerText = timeString;
+            document.getElementById('clock-date').innerText = dateString;
+        }
+
+        // --- OBTENER DATOS DE LA API (Open-Meteo) ---
+        async function fetchWeather() {
+            try {
+                // Solicitamos: Temp actual, humedad, viento, sensación térmica Y previsión diaria
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // 1. ACTUALIZAR TIEMPO ACTUAL
+                const current = data.current;
+                document.getElementById('current-temp').innerText = Math.round(current.temperature_2m) + "°";
+                document.getElementById('current-desc').innerText = getWeatherDesc(current.weather_code);
+                document.getElementById('wind-speed').innerText = Math.round(current.wind_speed_10m);
+                document.getElementById('humidity').innerText = current.relative_humidity_2m + "%";
+                document.getElementById('feels-like').innerText = Math.round(current.apparent_temperature) + "°";
+
+                // Icono Hero
+                const iconClass = getWeatherIcon(current.weather_code);
+                const iconContainer = document.getElementById('current-icon');
+                iconContainer.innerHTML = `<i class="fas ${iconClass}"></i>`;
+                // Si es sol (0 o 1), ponerlo amarillo, si es lluvia/nubes, blanco/gris
+                iconContainer.style.color = (current.weather_code <= 1) ? '#ffcc00' : '#e0e0e0';
+
+                // 2. ACTUALIZAR PREVISIÓN 5 DÍAS
+                const daily = data.daily;
+                let forecastHTML = '';
+                
+                // Empezamos en i=1 porque i=0 es hoy
+                for(let i = 1; i <= 5; i++) {
+                    const date = new Date(daily.time[i]);
+                    const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                    const max = Math.round(daily.temperature_2m_max[i]);
+                    const min = Math.round(daily.temperature_2m_min[i]);
+                    const code = daily.weather_code[i];
+                    const icon = getWeatherIcon(code);
+
+                    forecastHTML += `
+                        <div class="forecast-row">
+                            <div class="f-day">${dayName}</div>
+                            <div class="f-icon"><i class="fas ${icon}"></i></div>
+                            <div class="f-temps">
+                                ${max}° <span class="low-temp">${min}°</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                document.getElementById('forecast-list').innerHTML = forecastHTML;
+
+            } catch (error) {
+                console.error("Error cargando clima:", error);
+                document.getElementById('current-desc').innerText = "Error de conexión";
+            }
+        }
+
+        // --- INICIALIZACIÓN ---
+        setInterval(updateClock, 1000);
+        updateClock();
+        fetchWeather();
+        setInterval(fetchWeather, 900000); // Actualizar cada 15 min
+    </script>
+
+</body>
+</html>
