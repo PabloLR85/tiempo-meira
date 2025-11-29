@@ -2,37 +2,44 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tiempo Meira - Bicos de Fío</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            /* Variable para controlar el tamaño del texto globalmente */
+            --base-size: 1.8vh; 
+        }
+
         body {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Outfit', sans-serif;
-            height: 1920px;
-            width: 1080px;
-            overflow: hidden;
+            /* CAMBIO CLAVE: Usamos 100% de la ventana, no píxeles fijos */
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Evita barras de scroll */
             color: #ffffff;
             
-            /* --- CONFIGURACIÓN DEL FONDO --- */
-            /* Busca primero 'fondo.jpg'. Si no carga, usa el color negro de fondo */
-            background-color: #000;
+            /* Fondo Pedregal adaptado */
+            background-color: #222;
             background-image: url('fondo.jpg'); 
             background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
+            /* cover asegura que llene todo sin deformarse */
+            background-size: cover; 
+            /* center bottom prioriza las rocas de abajo */
+            background-position: center bottom; 
         }
 
-        /* Capa oscura para garantizar legibilidad sobre cualquier foto */
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            /* Gradiente más oscuro abajo para que se lea bien el texto sobre las rocas */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.9) 100%);
             z-index: 1;
         }
 
@@ -40,120 +47,129 @@
             position: relative;
             z-index: 2;
             height: 100%;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 80px 60px; /* Márgenes seguros */
+            /* Padding porcentual para que no toque los bordes */
+            padding: 5vh 5vw; 
+            box-sizing: border-box;
         }
 
-        /* --- HEADER (Ubicación y Reloj) --- */
+        /* --- HEADER --- */
         header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             border-bottom: 2px solid rgba(255,255,255,0.2);
-            padding-bottom: 40px;
+            padding-bottom: 2vh;
         }
         .location h1 {
             margin: 0;
-            font-size: 3.5em;
+            font-size: 5rem; /* Relativo al root */
+            font-size: 6vh;  /* Relativo a la altura de pantalla */
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 0.1em;
             font-weight: 700;
+            line-height: 1;
         }
         .location p {
-            margin: 10px 0 0;
-            font-size: 1.8em;
-            opacity: 0.8;
+            margin: 1vh 0 0;
+            font-size: 2.5vh;
+            opacity: 0.9;
             font-weight: 200;
         }
         .clock {
             text-align: right;
         }
         .time {
-            font-size: 4em;
+            font-size: 6vh;
             font-weight: 200;
             line-height: 1;
         }
         .date {
-            font-size: 1.5em;
-            opacity: 0.7;
+            font-size: 2vh;
+            opacity: 0.8;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 1vh;
         }
 
-        /* --- HERO (Tiempo Actual) --- */
+        /* --- HERO (Temperatura) --- */
         .hero-weather {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 60px 0;
+            justify-content: center;
+            flex-grow: 1; /* Ocupa el espacio disponible */
             text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .hero-icon {
-            font-size: 10em;
-            margin-bottom: 20px;
-            color: #ffcc00; /* Color base sol */
+            font-size: 15vh; /* Se adapta a la altura */
+            margin-bottom: 2vh;
+            color: #ffcc00; 
         }
         .hero-temp {
-            font-size: 14em;
+            font-size: 22vh; /* Gigante pero escalable */
             font-weight: 700;
             line-height: 0.9;
+            margin-left: -2vh; /* Corrección óptica */
         }
         .hero-desc {
-            font-size: 3em;
+            font-size: 4vh;
             text-transform: capitalize;
             font-weight: 200;
-            margin-top: 20px;
+            margin-top: 2vh;
         }
 
         /* --- GRID DETALLES --- */
         .details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 60px;
+            gap: 2vw;
+            margin-bottom: 4vh;
         }
         .detail-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 30px;
+            padding: 2vh 1vw;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .detail-icon { font-size: 2.5em; margin-bottom: 15px; opacity: 0.9; }
-        .detail-value { font-size: 2.2em; font-weight: 700; }
-        .detail-label { font-size: 1.2em; opacity: 0.7; text-transform: uppercase; margin-top: 5px;}
+        .detail-icon { font-size: 3vh; margin-bottom: 1vh; opacity: 0.9; }
+        .detail-value { font-size: 3vh; font-weight: 700; }
+        .detail-label { font-size: 1.5vh; opacity: 0.8; text-transform: uppercase; margin-top: 0.5vh;}
 
-        /* --- FORECAST (Próximos 5 días) --- */
+        /* --- FORECAST --- */
         .forecast-container {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5); /* Más oscuro para contraste con rocas */
             border-radius: 30px;
-            padding: 40px;
+            padding: 3vh 4vw;
+            margin-bottom: 2vh;
         }
         .forecast-title {
-            font-size: 1.8em;
-            margin-bottom: 30px;
+            font-size: 2.5vh;
+            margin-bottom: 2vh;
             text-transform: uppercase;
             letter-spacing: 2px;
-            opacity: 0.8;
+            opacity: 0.9;
             border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 15px;
+            padding-bottom: 1vh;
         }
         .forecast-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 25px 0;
+            padding: 1.5vh 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 2em;
+            font-size: 2.5vh;
         }
         .forecast-row:last-child { border-bottom: none; }
-        .f-day { width: 30%; text-transform: capitalize; font-weight: 400; }
+        .f-day { width: 35%; text-transform: capitalize; font-weight: 400; }
         .f-icon { width: 20%; text-align: center; color: #ddd; }
-        .f-temps { width: 50%; text-align: right; font-weight: 700; }
-        .low-temp { opacity: 0.6; font-weight: 200; margin-left: 15px; font-size: 0.8em; }
+        .f-temps { width: 45%; text-align: right; font-weight: 700; }
+        .low-temp { opacity: 0.6; font-weight: 200; margin-left: 10px; font-size: 0.9em; }
 
     </style>
 </head>
@@ -175,14 +191,14 @@
         <div class="hero-weather">
             <div class="hero-icon" id="current-icon"><i class="fas fa-circle-notch fa-spin"></i></div>
             <div class="hero-temp" id="current-temp">--°</div>
-            <div class="hero-desc" id="current-desc">Cargando datos...</div>
+            <div class="hero-desc" id="current-desc">Cargando...</div>
         </div>
 
         <div class="details-grid">
             <div class="detail-card">
                 <div class="detail-icon"><i class="fas fa-wind"></i></div>
                 <div class="detail-value" id="wind-speed">--</div>
-                <div class="detail-label">Viento (km/h)</div>
+                <div class="detail-label">Viento</div>
             </div>
             <div class="detail-card">
                 <div class="detail-icon"><i class="fas fa-tint"></i></div>
@@ -197,7 +213,7 @@
         </div>
 
         <div class="forecast-container">
-            <div class="forecast-title">Próximos 5 días</div>
+            <div class="forecast-title">Previsión 5 Días</div>
             <div id="forecast-list">
                 </div>
         </div>
@@ -205,19 +221,16 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN PARA MEIRA, LUGO ---
         const LAT = 43.2132;
         const LON = -7.2934;
         
-        // Mapeo de códigos WMO a Iconos FontAwesome
         function getWeatherIcon(code) {
             switch(true) {
                 case (code === 0): return 'fa-sun'; 
                 case (code >= 1 && code <= 3): return 'fa-cloud-sun'; 
                 case (code >= 45 && code <= 48): return 'fa-smog'; 
                 case (code >= 51 && code <= 55): return 'fa-cloud-rain'; 
-                case (code >= 56 && code <= 57): return 'fa-snowflake'; 
-                case (code >= 61 && code <= 67): return 'fa-umbrella'; 
+                case (code >= 56 && code <= 67): return 'fa-umbrella'; 
                 case (code >= 71 && code <= 77): return 'fa-snowflake'; 
                 case (code >= 80 && code <= 82): return 'fa-cloud-showers-heavy'; 
                 case (code >= 85 && code <= 86): return 'fa-snowflake'; 
@@ -226,40 +239,30 @@
             }
         }
 
-        // Mapeo de códigos a Descripción en texto
         function getWeatherDesc(code) {
             const descriptions = {
-                0: "Cielo despejado", 1: "Poco nuboso", 2: "Parcialmente nublado", 3: "Nublado",
-                45: "Niebla", 48: "Niebla con escarcha",
-                51: "Llovizna ligera", 53: "Llovizna moderada", 55: "Llovizna densa",
-                61: "Lluvia ligera", 63: "Lluvia moderada", 65: "Lluvia fuerte",
-                71: "Nieve ligera", 73: "Nieve moderada", 75: "Nieve fuerte",
-                95: "Tormenta eléctrica"
+                0: "Despejado", 1: "Poco nuboso", 2: "Nublado", 3: "Cubierto",
+                45: "Niebla", 48: "Escarcha", 51: "Llovizna", 53: "Llovizna", 55: "Llovizna",
+                61: "Lluvia", 63: "Lluvia", 65: "Lluvia fuerte", 71: "Nieve", 95: "Tormenta"
             };
-            return descriptions[code] || "Condiciones variables";
+            return descriptions[code] || "Variable";
         }
 
-        // --- RELOJ Y FECHA ---
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            // Fecha con primera mayúscula
             let dateString = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
             dateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-            
             document.getElementById('clock-time').innerText = timeString;
             document.getElementById('clock-date').innerText = dateString;
         }
 
-        // --- OBTENER DATOS DE LA API (Open-Meteo) ---
         async function fetchWeather() {
             try {
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
-                
                 const response = await fetch(url);
                 const data = await response.json();
 
-                // 1. ACTUALIZAR TIEMPO ACTUAL
                 const current = data.current;
                 document.getElementById('current-temp').innerText = Math.round(current.temperature_2m) + "°";
                 document.getElementById('current-desc').innerText = getWeatherDesc(current.weather_code);
@@ -267,45 +270,31 @@
                 document.getElementById('humidity').innerText = current.relative_humidity_2m + "%";
                 document.getElementById('feels-like').innerText = Math.round(current.apparent_temperature) + "°";
 
-                // Icono Hero
                 const iconClass = getWeatherIcon(current.weather_code);
                 const iconContainer = document.getElementById('current-icon');
                 iconContainer.innerHTML = `<i class="fas ${iconClass}"></i>`;
-                // Si es sol (0 o 1), ponerlo amarillo, si es lluvia/nubes, blanco/gris
                 iconContainer.style.color = (current.weather_code <= 1) ? '#ffcc00' : '#e0e0e0';
 
-                // 2. ACTUALIZAR PREVISIÓN 5 DÍAS
                 const daily = data.daily;
                 let forecastHTML = '';
-                
                 for(let i = 1; i <= 5; i++) {
                     const date = new Date(daily.time[i]);
                     let dayName = date.toLocaleDateString('es-ES', { weekday: 'long' });
-                    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1); // Mayúscula inicial
+                    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
                     const max = Math.round(daily.temperature_2m_max[i]);
                     const min = Math.round(daily.temperature_2m_min[i]);
-                    const code = daily.weather_code[i];
-                    const icon = getWeatherIcon(code);
-
+                    const icon = getWeatherIcon(daily.weather_code[i]);
                     forecastHTML += `
                         <div class="forecast-row">
                             <div class="f-day">${dayName}</div>
                             <div class="f-icon"><i class="fas ${icon}"></i></div>
-                            <div class="f-temps">
-                                ${max}° <span class="low-temp">${min}°</span>
-                            </div>
-                        </div>
-                    `;
+                            <div class="f-temps">${max}° <span class="low-temp">${min}°</span></div>
+                        </div>`;
                 }
                 document.getElementById('forecast-list').innerHTML = forecastHTML;
-
-            } catch (error) {
-                console.error("Error cargando clima:", error);
-                document.getElementById('current-desc').innerText = "Cargando...";
-            }
+            } catch (error) { console.error("Error:", error); }
         }
 
-        // --- INICIALIZACIÓN ---
         setInterval(updateClock, 1000);
         updateClock();
         fetchWeather();
