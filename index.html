@@ -1,8 +1,12 @@
-<!DOCTYPE html><html lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
-    <title>Tiempo Meira Digital Signage</title>
+    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+    <title>Tiempo Meira - Bicos de Fío</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -14,16 +18,21 @@
             width: 1080px;
             overflow: hidden;
             color: #ffffff;
-            /* Fondo evocador para Galicia (Bosque/Niebla/Naturaleza) */
-            background: url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1080&h=1920&fit=crop') no-repeat center center;
+            
+            /* --- CONFIGURACIÓN DEL FONDO --- */
+            /* Busca primero 'fondo.jpg'. Si no carga, usa el color negro de fondo */
+            background-color: #000;
+            background-image: url('fondo.jpg'); 
+            background-repeat: no-repeat;
+            background-position: center center;
             background-size: cover;
         }
 
-        /* Capa oscura para garantizar legibilidad */
+        /* Capa oscura para garantizar legibilidad sobre cualquier foto */
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
             z-index: 1;
         }
 
@@ -84,7 +93,7 @@
         .hero-icon {
             font-size: 10em;
             margin-bottom: 20px;
-            color: #ffcc00; /* Color base sol, cambiará via JS si llueve */
+            color: #ffcc00; /* Color base sol */
         }
         .hero-temp {
             font-size: 14em;
@@ -98,7 +107,7 @@
             margin-top: 20px;
         }
 
-        /* --- GRID DETALLES (Viento, Humedad) --- */
+        /* --- GRID DETALLES --- */
         .details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -147,7 +156,7 @@
         .low-temp { opacity: 0.6; font-weight: 200; margin-left: 15px; font-size: 0.8em; }
 
     </style>
-<script defer="" data-domain="tiempo-meira.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><meta property="og:url" content="https://tiempo-meira.tiiny.site/" data-id="th-modified"><meta property="og:type" content="website" data-id="th-modified"></head>
+</head>
 <body>
     <div class="overlay"></div>
     <div class="container">
@@ -202,18 +211,17 @@
         
         // Mapeo de códigos WMO a Iconos FontAwesome
         function getWeatherIcon(code) {
-            // Códigos: https://open-meteo.com/en/docs
             switch(true) {
-                case (code === 0): return 'fa-sun'; // Despejado
-                case (code >= 1 && code <= 3): return 'fa-cloud-sun'; // Nuboso
-                case (code >= 45 && code <= 48): return 'fa-smog'; // Niebla
-                case (code >= 51 && code <= 55): return 'fa-cloud-rain'; // Llovizna
-                case (code >= 56 && code <= 57): return 'fa-snowflake'; // Lluvia helada
-                case (code >= 61 && code <= 67): return 'fa-umbrella'; // Lluvia
-                case (code >= 71 && code <= 77): return 'fa-snowflake'; // Nieve
-                case (code >= 80 && code <= 82): return 'fa-cloud-showers-heavy'; // Chubascos
-                case (code >= 85 && code <= 86): return 'fa-snowflake'; // Chubascos nieve
-                case (code >= 95): return 'fa-bolt'; // Tormenta
+                case (code === 0): return 'fa-sun'; 
+                case (code >= 1 && code <= 3): return 'fa-cloud-sun'; 
+                case (code >= 45 && code <= 48): return 'fa-smog'; 
+                case (code >= 51 && code <= 55): return 'fa-cloud-rain'; 
+                case (code >= 56 && code <= 57): return 'fa-snowflake'; 
+                case (code >= 61 && code <= 67): return 'fa-umbrella'; 
+                case (code >= 71 && code <= 77): return 'fa-snowflake'; 
+                case (code >= 80 && code <= 82): return 'fa-cloud-showers-heavy'; 
+                case (code >= 85 && code <= 86): return 'fa-snowflake'; 
+                case (code >= 95): return 'fa-bolt'; 
                 default: return 'fa-cloud';
             }
         }
@@ -235,7 +243,9 @@
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            const dateString = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            // Fecha con primera mayúscula
+            let dateString = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            dateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
             
             document.getElementById('clock-time').innerText = timeString;
             document.getElementById('clock-date').innerText = dateString;
@@ -244,7 +254,6 @@
         // --- OBTENER DATOS DE LA API (Open-Meteo) ---
         async function fetchWeather() {
             try {
-                // Solicitamos: Temp actual, humedad, viento, sensación térmica Y previsión diaria
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
                 
                 const response = await fetch(url);
@@ -269,10 +278,10 @@
                 const daily = data.daily;
                 let forecastHTML = '';
                 
-                // Empezamos en i=1 porque i=0 es hoy
                 for(let i = 1; i <= 5; i++) {
                     const date = new Date(daily.time[i]);
-                    const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                    let dayName = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1); // Mayúscula inicial
                     const max = Math.round(daily.temperature_2m_max[i]);
                     const min = Math.round(daily.temperature_2m_min[i]);
                     const code = daily.weather_code[i];
@@ -292,7 +301,7 @@
 
             } catch (error) {
                 console.error("Error cargando clima:", error);
-                document.getElementById('current-desc').innerText = "Error de conexión";
+                document.getElementById('current-desc').innerText = "Cargando...";
             }
         }
 
@@ -300,8 +309,7 @@
         setInterval(updateClock, 1000);
         updateClock();
         fetchWeather();
-        setInterval(fetchWeather, 900000); // Actualizar cada 15 min
+        setInterval(fetchWeather, 900000); 
     </script>
-
 </body>
 </html>
