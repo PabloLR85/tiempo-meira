@@ -2,263 +2,233 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
-    <title>Tiempo Meira - Estructura Fija</title>
-    
+    <title>Tiempo Bicos de Fio - Estructura Instagram</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
 
     <style>
-        /* RESET TOTAL */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            height: 1920px;
-            width: 1080px;
-            overflow: hidden; /* Cortamos lo que sobre, pero calcularemos para que no sobre nada */
-            color: #ffffff;
-            background-color: #222;
+        /* RESET IGUAL QUE INSTAGRAM */
+        * { box-sizing: border-box; }
+        
+        body { 
+            margin: 0; 
+            padding: 0; 
+            width: 1080px; 
+            height: 1920px; 
+            overflow: hidden; 
+            font-family: 'Outfit', sans-serif; 
+            color: #fff; 
             
-            /* IMAGEN FONDO */
-            background-image: url('fondo.jpg'); 
+            /* ESTRUCTURA FLEXBOX COLUMNA (Igual que Instagram) */
+            display: flex; 
+            flex-direction: column; 
+            
+            /* FONDO */
+            background-color: #222;
+            background-image: url('fondo.jpg');
             background-repeat: no-repeat;
-            background-size: cover; 
-            background-position: center bottom; 
+            background-size: cover;
+            background-position: center bottom;
         }
 
+        /* CAPA OSCURA (Para que se lea bien) */
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.9) 100%);
-            z-index: 1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.9) 100%);
+            z-index: 0;
         }
 
-        /* CONTENEDOR PRINCIPAL - ESTRATEGIA FLEXBOX VERTICAL ESTRICTA */
-        .container {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 60px; /* Márgenes laterales seguros */
-        }
-
-        /* 1. SECCIÓN HEADER (12% ALTURA) */
-        header {
-            height: 12%; 
+        /* --- ZONA 1: CABECERA (10% Alto) --- */
+        .zone-header {
+            position: relative; z-index: 1;
+            height: 10%; /* Porcentaje fijo */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding: 0 60px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
         }
-        .location h1 { font-size: 80px; font-weight: 700; margin: 0; line-height: 1; }
-        .location p { font-size: 35px; margin: 5px 0 0; opacity: 0.9; font-weight: 200; }
-        .time { font-size: 80px; font-weight: 200; line-height: 1; text-align: right; }
-        .date { font-size: 28px; text-transform: uppercase; margin-top: 5px; text-align: right; opacity: 0.9; }
+        .title h1 { font-size: 60px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 2px; line-height: 1; }
+        .title p { font-size: 24px; margin: 5px 0 0; opacity: 0.9; font-weight: 300; }
+        .clock { text-align: right; }
+        .time { font-size: 60px; font-weight: 300; line-height: 1; }
+        .date { font-size: 20px; opacity: 0.8; margin-top: 5px; text-transform: uppercase; }
 
-        /* 2. SECCIÓN HERO (33% ALTURA) - Reducida para que quepa lo de abajo */
-        .hero-weather {
-            height: 33%;
+        /* --- ZONA 2: HÉROE (35% Alto) --- */
+        .zone-hero {
+            position: relative; z-index: 1;
+            height: 35%; /* Porcentaje fijo */
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
         }
-        /* Ajustamos tamaños para que no empujen */
-        .hero-icon { font-size: 180px; color: #ffcc00; filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.3)); margin-bottom: 10px; }
-        .hero-temp { font-size: 280px; font-weight: 700; line-height: 0.8; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .hero-desc { font-size: 50px; font-weight: 200; margin-top: 20px; text-transform: capitalize; }
+        .hero-icon { font-size: 160px; color: #ffcc00; filter: drop-shadow(0 0 30px rgba(255,204,0,0.4)); margin-bottom: 10px; }
+        .hero-temp { font-size: 240px; font-weight: 800; line-height: 0.8; text-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .hero-desc { font-size: 40px; font-weight: 300; margin-top: 20px; text-transform: capitalize; background: rgba(0,0,0,0.4); padding: 5px 30px; border-radius: 50px; }
 
-        /* 3. SECCIÓN DETALLES (15% ALTURA) */
-        .details-grid {
-            height: 15%;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 30px;
-            align-content: center; /* Centrar verticalmente */
+        /* --- ZONA 3: DETALLES (20% Alto) --- */
+        .zone-details {
+            position: relative; z-index: 1;
+            height: 20%; /* Porcentaje fijo */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
         }
-        .detail-card {
+        .d-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
+            width: 30%; height: 70%; /* Ocupan el 70% de la zona disponible */
             border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 1px solid rgba(255,255,255,0.15);
-            height: 100%; /* Llenar su hueco */
         }
-        .detail-icon { font-size: 50px; margin-bottom: 10px; }
-        .detail-value { font-size: 50px; font-weight: 700; }
-        .detail-label { font-size: 24px; opacity: 0.9; text-transform: uppercase; }
+        .d-icon { font-size: 40px; margin-bottom: 10px; }
+        .d-val { font-size: 45px; font-weight: 800; }
+        .d-lbl { font-size: 18px; text-transform: uppercase; opacity: 0.8; margin-top: 5px; }
 
-        /* 4. SECCIÓN FORECAST (35% ALTURA) - AHORA TIENE ESPACIO RESERVADO */
-        .forecast-container {
-            height: 35%; /* Ocupa el 35% inferior sí o sí */
-            background: rgba(0, 0, 0, 0.6); 
-            border-radius: 30px;
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px; /* Separación extra */
+        /* --- ZONA 4: PREVISIÓN (35% Alto - IGUAL QUE INFO ZONE DE INSTAGRAM) --- */
+        .zone-forecast {
+            position: relative; z-index: 1;
+            height: 35%; /* Porcentaje fijo */
+            background: rgba(0,0,0,0.6); /* Fondo oscuro para contraste */
+            padding: 40px 60px;
+            display: flex; flex-direction: column;
         }
-        .forecast-title {
-            font-size: 35px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.9;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 15px;
-            margin-bottom: 10px;
-            height: 15%; /* Título ocupa un poco */
+        .f-title { font-size: 28px; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 15px; margin-bottom: 10px; }
+        .f-list { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-evenly; /* Repartir espacio sobrante */
+            height: 100%; 
         }
-        #forecast-list {
-            height: 85%; /* La lista ocupa el resto */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Reparte el espacio disponible */
-        }
-        .forecast-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 40px; /* Tamaño letra lista */
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            height: 20%; /* Cada día ocupa un 20% del espacio disponible */
-        }
-        .forecast-row:last-child { border-bottom: none; }
-        .f-day { width: 35%; text-transform: capitalize; font-weight: 400; }
-        .f-icon { width: 20%; text-align: center; color: #eee; }
-        .f-temps { width: 45%; text-align: right; font-weight: 700; }
-        .low-temp { opacity: 0.7; font-weight: 200; margin-left: 15px; font-size: 0.8em; }
+        .f-row { display: flex; justify-content: space-between; align-items: center; font-size: 38px; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0; }
+        .f-row:last-child { border-bottom: none; }
+        .fr-day { width: 35%; text-transform: capitalize; font-weight: 500; }
+        .fr-icon { width: 20%; text-align: center; }
+        .fr-temps { width: 45%; text-align: right; font-weight: 800; }
+        .low-t { font-size: 0.8em; font-weight: 300; opacity: 0.7; margin-left: 15px; }
 
     </style>
 </head>
 <body>
+
     <div class="overlay"></div>
-    <div class="container">
-        
-        <header>
-            <div class="location">
-                <h1>MEIRA</h1>
-                <p>Lugo, Galicia</p>
-            </div>
-            <div class="clock">
-                <div class="time" id="clock-time">--:--</div>
-                <div class="date" id="clock-date">...</div>
-            </div>
-        </header>
 
-        <div class="hero-weather">
-            <div class="hero-icon" id="current-icon"><i class="fas fa-circle-notch fa-spin"></i></div>
-            <div class="hero-temp" id="current-temp">--°</div>
-            <div class="hero-desc" id="current-desc">Cargando...</div>
+    <div class="zone-header">
+        <div class="title">
+            <h1>MEIRA</h1>
+            <p>Lugo, Galicia</p>
         </div>
-
-        <div class="details-grid">
-            <div class="detail-card">
-                <div class="detail-icon"><i class="fas fa-wind"></i></div>
-                <div class="detail-value" id="wind-speed">--</div>
-                <div class="detail-label">Viento</div>
-            </div>
-            <div class="detail-card">
-                <div class="detail-icon"><i class="fas fa-tint"></i></div>
-                <div class="detail-value" id="humidity">--%</div>
-                <div class="detail-label">Humedad</div>
-            </div>
-            <div class="detail-card">
-                <div class="detail-icon"><i class="fas fa-temperature-high"></i></div>
-                <div class="detail-value" id="feels-like">--°</div>
-                <div class="detail-label">Sensación</div>
-            </div>
+        <div class="clock">
+            <div class="time" id="clock-time">00:00</div>
+            <div class="date" id="clock-date">...</div>
         </div>
+    </div>
 
-        <div class="forecast-container">
-            <div class="forecast-title">Previsión 5 Días</div>
-            <div id="forecast-list">
-                </div>
+    <div class="zone-hero">
+        <i class="fas fa-circle-notch fa-spin hero-icon" id="main-icon"></i>
+        <div class="hero-temp" id="main-temp">--°</div>
+        <div class="hero-desc" id="main-desc">Cargando...</div>
+    </div>
+
+    <div class="zone-details">
+        <div class="d-card">
+            <i class="fas fa-wind d-icon"></i>
+            <div class="d-val" id="val-wind">--</div>
+            <div class="d-lbl">Viento</div>
         </div>
+        <div class="d-card">
+            <i class="fas fa-tint d-icon"></i>
+            <div class="d-val" id="val-hum">--%</div>
+            <div class="d-lbl">Humedad</div>
+        </div>
+        <div class="d-card">
+            <i class="fas fa-temperature-high d-icon"></i>
+            <div class="d-val" id="val-feel">--°</div>
+            <div class="d-lbl">Sensación</div>
+        </div>
+    </div>
 
+    <div class="zone-forecast">
+        <div class="f-title">Próximos 5 Días</div>
+        <div class="f-list" id="forecast-target">
+            </div>
     </div>
 
     <script>
-        const LAT = 43.2132;
+        const LAT = 43.2132; 
         const LON = -7.2934;
-        
-        function getWeatherIcon(code) {
-            switch(true) {
-                case (code === 0): return 'fa-sun'; 
-                case (code >= 1 && code <= 3): return 'fa-cloud-sun'; 
-                case (code >= 45 && code <= 48): return 'fa-smog'; 
-                case (code >= 51 && code <= 55): return 'fa-cloud-rain'; 
-                case (code >= 56 && code <= 67): return 'fa-umbrella'; 
-                case (code >= 71 && code <= 77): return 'fa-snowflake'; 
-                case (code >= 80 && code <= 82): return 'fa-cloud-showers-heavy'; 
-                case (code >= 85 && code <= 86): return 'fa-snowflake'; 
-                case (code >= 95): return 'fa-bolt'; 
-                default: return 'fa-cloud';
-            }
-        }
 
-        function getWeatherDesc(code) {
-            const descriptions = {
-                0: "Despejado", 1: "Poco nuboso", 2: "Nublado", 3: "Cubierto",
-                45: "Niebla", 48: "Escarcha", 51: "Llovizna", 53: "Llovizna", 55: "Llovizna",
-                61: "Lluvia", 63: "Lluvia", 65: "Lluvia fuerte", 71: "Nieve", 95: "Tormenta"
-            };
-            return descriptions[code] || "Variable";
-        }
-
-        function updateClock() {
+        function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            let dateString = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-            dateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-            document.getElementById('clock-time').innerText = timeString;
-            document.getElementById('clock-date').innerText = dateString;
+            document.getElementById('clock-time').innerText = now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            let d = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+            document.getElementById('clock-date').innerText = d.charAt(0).toUpperCase() + d.slice(1);
         }
 
-        async function fetchWeather() {
+        async function initWeather() {
             try {
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
-                const response = await fetch(url);
-                const data = await response.json();
+                const res = await fetch(url);
+                const data = await res.json();
 
-                const current = data.current;
-                document.getElementById('current-temp').innerText = Math.round(current.temperature_2m) + "°";
-                document.getElementById('current-desc').innerText = getWeatherDesc(current.weather_code);
-                document.getElementById('wind-speed').innerText = Math.round(current.wind_speed_10m);
-                document.getElementById('humidity').innerText = current.relative_humidity_2m + "%";
-                document.getElementById('feels-like').innerText = Math.round(current.apparent_temperature) + "°";
+                // Current
+                const cur = data.current;
+                document.getElementById('main-temp').innerText = Math.round(cur.temperature_2m) + "°";
+                document.getElementById('val-wind').innerText = Math.round(cur.wind_speed_10m);
+                document.getElementById('val-hum').innerText = cur.relative_humidity_2m + "%";
+                document.getElementById('val-feel').innerText = Math.round(cur.apparent_temperature) + "°";
+                document.getElementById('main-desc').innerText = getWeatherDesc(cur.weather_code);
+                
+                const iconEl = document.getElementById('main-icon');
+                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} hero-icon`;
+                iconEl.style.color = (cur.weather_code <= 1) ? '#ffcc00' : '#ffffff';
 
-                const iconClass = getWeatherIcon(current.weather_code);
-                const iconContainer = document.getElementById('current-icon');
-                iconContainer.innerHTML = `<i class="fas ${iconClass}"></i>`;
-                iconContainer.style.color = (current.weather_code <= 1) ? '#ffcc00' : '#e0e0e0';
-
+                // Forecast
+                let html = '';
                 const daily = data.daily;
-                let forecastHTML = '';
-                for(let i = 1; i <= 5; i++) {
+                for(let i=1; i<=5; i++) {
                     const date = new Date(daily.time[i]);
-                    let dayName = date.toLocaleDateString('es-ES', { weekday: 'long' });
+                    let dayName = date.toLocaleDateString('es-ES', {weekday:'long'});
                     dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                    
+                    const code = daily.weather_code[i];
                     const max = Math.round(daily.temperature_2m_max[i]);
                     const min = Math.round(daily.temperature_2m_min[i]);
-                    const icon = getWeatherIcon(daily.weather_code[i]);
-                    forecastHTML += `
-                        <div class="forecast-row">
-                            <div class="f-day">${dayName}</div>
-                            <div class="f-icon"><i class="fas ${icon}"></i></div>
-                            <div class="f-temps">${max}° <span class="low-temp">${min}°</span></div>
-                        </div>`;
+                    let iColor = (code === 0) ? '#ffcc00' : '#eee';
+
+                    html += `
+                    <div class="f-row">
+                        <div class="fr-day">${dayName}</div>
+                        <div class="fr-icon"><i class="fas ${getWeatherIcon(code)}" style="color:${iColor}"></i></div>
+                        <div class="fr-temps">${max}° <span class="low-t">${min}°</span></div>
+                    </div>`;
                 }
-                document.getElementById('forecast-list').innerHTML = forecastHTML;
-            } catch (error) { console.error("Error:", error); }
+                document.getElementById('forecast-target').innerHTML = html;
+
+            } catch(e) { console.error(e); }
         }
 
-        setInterval(updateClock, 1000);
-        updateClock();
-        fetchWeather();
-        setInterval(fetchWeather, 900000); 
+        function getWeatherIcon(c) {
+            if(c===0) return 'fa-sun';
+            if(c<4) return 'fa-cloud-sun';
+            if(c<50) return 'fa-smog';
+            if(c<60) return 'fa-cloud-rain';
+            if(c<80) return 'fa-umbrella';
+            if(c<90) return 'fa-snowflake';
+            return 'fa-bolt';
+        }
+        function getWeatherDesc(c) {
+            const m = {0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto", 45:"Niebla", 61:"Lluvia", 71:"Nieve", 95:"Tormenta"};
+            return m[c] || "Variable";
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+        initWeather();
+        setInterval(initWeather, 900000);
     </script>
 </body>
 </html>
