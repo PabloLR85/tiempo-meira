@@ -82,4 +82,115 @@
         }
         .f-title {
             font-size: 30px; text-transform: uppercase; letter-spacing: 3px;
-            border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 20px; margin-bottom: 20px; opacity:
+            border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 20px; margin-bottom: 20px; opacity: 0.9;
+        }
+        .f-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .f-row {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 40px; background: rgba(0,0,0,0.4); padding: 15px 30px; border-radius: 15px;
+        }
+        .fr-day { width: 35%; font-weight: 500; text-transform: capitalize; }
+        .fr-icon { width: 20%; text-align: center; }
+        .fr-temps { width: 45%; text-align: right; font-weight: 800; }
+        .min-t { font-weight: 300; opacity: 0.7; font-size: 0.8em; margin-left: 15px; }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <div class="overlay"></div>
+        <header>
+            <div class="title-group">
+                <h1>MEIRA</h1>
+                <p>Lugo, Galicia</p>
+            </div>
+            <div class="clock-group">
+                <div class="time" id="clock-time">00:00</div>
+                <div class="date" id="clock-date">...</div>
+            </div>
+        </header>
+        <div class="hero-section">
+            <i class="fas fa-circle-notch fa-spin main-icon" id="main-icon"></i>
+            <div class="main-temp" id="main-temp">--°</div>
+            <div class="main-desc" id="main-desc">Conectando...</div>
+        </div>
+        <div class="details-section">
+            <div class="d-box"><i class="fas fa-wind d-icon"></i><div class="d-val" id="val-wind">--</div><div class="d-lbl">Viento</div></div>
+            <div class="d-box"><i class="fas fa-tint d-icon"></i><div class="d-val" id="val-hum">--%</div><div class="d-lbl">Humedad</div></div>
+            <div class="d-box"><i class="fas fa-temperature-high d-icon"></i><div class="d-val" id="val-feel">--°</div><div class="d-lbl">Sensación</div></div>
+        </div>
+        <div class="forecast-section">
+            <div class="f-title">Próximos 5 Días</div>
+            <div class="f-list" id="forecast-target"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- SCRIPT DE ESCALADO AUTOMÁTICO ---
+        function autoScale() {
+            const app = document.getElementById('app-container');
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            
+            // Calculamos cuánto tenemos que escalar para llenar el ancho
+            const scaleX = winW / 1080;
+            const scaleY = winH / 1920;
+            
+            // Usamos el menor de los dos para que quepa todo, o el X para forzar ancho
+            // En este caso, forzamos llenar el ancho para que no haya bordes negros
+            const scale = scaleX; 
+            
+            app.style.transform = `scale(${scale})`;
+            
+            // Ajustamos la altura del body para eliminar scroll si sobra un poco
+            document.body.style.height = (1920 * scale) + "px";
+        }
+        
+        window.addEventListener('resize', autoScale);
+        autoScale(); // Ejecutar al inicio
+
+        // --- LÓGICA DEL TIEMPO ---
+        const LAT = 43.2132; const LON = -7.2934;
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock-time').innerText = now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            let d = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+            document.getElementById('clock-date').innerText = d.charAt(0).toUpperCase() + d.slice(1);
+        }
+        async function initWeather() {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const cur = data.current;
+                document.getElementById('main-temp').innerText = Math.round(cur.temperature_2m) + "°";
+                document.getElementById('val-wind').innerText = Math.round(cur.wind_speed_10m);
+                document.getElementById('val-hum').innerText = cur.relative_humidity_2m + "%";
+                document.getElementById('val-feel').innerText = Math.round(cur.apparent_temperature) + "°";
+                document.getElementById('main-desc').innerText = getWeatherDesc(cur.weather_code);
+                const iconEl = document.getElementById('main-icon');
+                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} main-icon`;
+                iconEl.style.color = (cur.weather_code <= 1) ? '#ffcc00' : '#ffffff';
+                let html = '';
+                const daily = data.daily;
+                for(let i=1; i<=5; i++) {
+                    const date = new Date(daily.time[i]);
+                    let dayName = date.toLocaleDateString('es-ES', {weekday:'long'});
+                    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                    const code = daily.weather_code[i];
+                    let iColor = (code === 0) ? '#ffcc00' : '#eee';
+                    html += `<div class="f-row"><div class="fr-day">${dayName}</div><div class="fr-icon"><i class="fas ${getWeatherIcon(code)}" style="color:${iColor}"></i></div><div class="fr-temps">${Math.round(daily.temperature_2m_max[i])}° <span class="min-t">${Math.round(daily.temperature_2m_min[i])}°</span></div></div>`;
+                }
+                document.getElementById('forecast-target').innerHTML = html;
+            } catch(e) { console.error(e); }
+        }
+        function getWeatherIcon(c) {
+            if(c===0) return 'fa-sun'; if(c>=1&&c<=3) return 'fa-cloud-sun'; if(c>=45&&c<=48) return 'fa-smog'; if(c>=51&&c<=67) return 'fa-cloud-rain'; if(c>=71&&c<=77) return 'fa-snowflake'; if(c>=80&&c<=82) return 'fa-umbrella'; if(c>=85&&c<=86) return 'fa-snowflake'; if(c>=95) return 'fa-bolt'; return 'fa-cloud';
+        }
+        function getWeatherDesc(c) {
+            const m = {0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto", 45:"Niebla", 48:"Niebla escarcha", 51:"Llovizna", 53:"Llovizna", 55:"Llovizna", 61:"Lluvia", 63:"Lluvia", 65:"Lluvia fuerte", 71:"Nieve", 73:"Nieve", 75:"Nieve fuerte", 80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes", 85:"Nieve", 86:"Nieve fuerte", 95:"Tormenta", 96:"Tormenta con granizo", 99:"Tormenta fuerte"}; return m[c] || "Variable";
+        }
+        setInterval(updateTime, 1000); updateTime(); initWeather(); setInterval(initWeather, 900000);
+    </script>
+</body>
+</html>
