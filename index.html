@@ -2,103 +2,181 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tiempo Meira - Auto Ajuste</title>
-    <style> * { box-sizing: border-box; margin: 0; padding: 0; } </style>
+    <title>Tiempo Meira 4K Fluido</title>
+    <style> 
+        * { box-sizing: border-box; margin: 0; padding: 0; } 
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+    </style>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
 
     <style>
         body {
-            background-color: #000; overflow: hidden; margin: 0;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; width: 100vw;
-        }
-
-        /* EL CONTENEDOR MAESTRO (Diseñado en 1080p nativo) */
-        #app-container {
-            width: 1080px;
-            height: 1920px;
-            background-color: #222;
-            color: white;
+            background-color: #000;
             font-family: 'Outfit', sans-serif;
-            position: relative;
-            transform-origin: top left; /* El escalado empieza arriba a la izquierda */
+            color: #ffffff;
             
-            /* FONDO */
+            /* ESTRUCTURA FLEXBOX VERTICAL */
+            display: flex;
+            flex-direction: column;
+            
+            /* FONDO QUE SE ADAPTA AL 100% */
             background-image: url('fondo.jpg');
             background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center bottom;
-            
-            /* Estructura Flex Vertical */
-            display: flex; flex-direction: column;
+            background-size: cover; 
+            background-position: center bottom; /* Prioridad a las rocas de abajo */
         }
 
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.9) 100%);
+            /* Gradiente para leer bien los textos blancos */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.9) 100%);
             z-index: 0;
         }
 
-        header, .hero-section, .details-section, .forecast-section {
-            z-index: 1; position: relative; padding-left: 60px; padding-right: 60px;
+        /* --- CONTENEDOR PRINCIPAL (Encima del overlay) --- */
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Reparte el espacio verticalmente */
+            padding: 4% 6%; /* Márgenes porcentuales */
         }
 
-        /* 1. CABECERA (220px) */
+        /* --- 1. CABECERA (12% Altura) --- */
         header {
-            height: 220px; display: flex; justify-content: space-between; align-items: flex-end; padding-top: 60px;
+            height: 12%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 2%;
         }
-        .title-group h1 { font-size: 80px; font-weight: 800; letter-spacing: 4px; line-height: 1; margin-bottom: 10px; text-transform: uppercase;}
-        .title-group p { font-size: 30px; font-weight: 300; opacity: 0.9; }
+        
+        .title-group h1 { 
+            font-size: 4.5vh; /* Escalable con la altura */
+            font-weight: 800; 
+            letter-spacing: 0.1em; 
+            line-height: 1; 
+            margin-bottom: 0.5vh; 
+            text-transform: uppercase;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        .title-group p { font-size: 1.8vh; opacity: 0.9; font-weight: 300; }
+        
         .clock-group { text-align: right; }
-        .time { font-size: 90px; font-weight: 300; line-height: 1; }
-        .date { font-size: 26px; text-transform: uppercase; margin-top: 10px; font-weight: 500; opacity: 0.8; }
-
-        /* 2. HÉROE (Flexible) */
-        .hero-section {
-            flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        .time { 
+            font-size: 5vh; 
+            font-weight: 300; 
+            line-height: 1; 
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
-        .main-icon { font-size: 220px; color: #ffcc00; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3)); margin-bottom: 20px; }
-        .main-temp { font-size: 320px; font-weight: 800; line-height: 0.9; text-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .main-desc { font-size: 50px; font-weight: 300; margin-top: 20px; text-transform: capitalize; background: rgba(0,0,0,0.3); padding: 10px 40px; border-radius: 50px; backdrop-filter: blur(5px); }
+        .date { font-size: 1.5vh; opacity: 0.9; text-transform: uppercase; margin-top: 0.5vh; }
 
-        /* 3. DETALLES (250px) */
+        /* --- 2. HÉROE (Flexible - Ocupa lo que pueda) --- */
+        .hero-section {
+            flex-grow: 1; /* Ocupa el espacio libre central */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+        }
+        .hero-icon { 
+            font-size: 12vh; /* Icono gigante relativo */
+            color: #ffcc00; 
+            filter: drop-shadow(0 0 30px rgba(255,204,0,0.3)); 
+            margin-bottom: 1vh; 
+        }
+        .hero-temp { 
+            font-size: 18vh; /* Temperatura gigante relativa */
+            font-weight: 800; 
+            line-height: 0.9; 
+            text-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+        }
+        .hero-desc { 
+            font-size: 3vh; 
+            font-weight: 300; 
+            margin-top: 1vh; 
+            text-transform: capitalize; 
+            background: rgba(0,0,0,0.3); 
+            padding: 0.5vh 3vh; 
+            border-radius: 50px; 
+            backdrop-filter: blur(5px); 
+        }
+
+        /* --- 3. DETALLES (15% Altura) --- */
         .details-section {
-            height: 250px; display: flex; justify-content: space-between; align-items: center;
+            height: 15%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 2%;
         }
         .d-box {
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px);
-            width: 30%; height: 180px; border-radius: 30px;
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(15px);
+            width: 31%; /* 3 cajas */
+            height: 80%;
+            border-radius: 2vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
-        .d-icon { font-size: 50px; margin-bottom: 10px; }
-        .d-val { font-size: 50px; font-weight: 800; }
-        .d-lbl { font-size: 20px; text-transform: uppercase; opacity: 0.8; margin-top: 5px; }
+        .d-icon { font-size: 3vh; margin-bottom: 0.5vh; }
+        .d-val { font-size: 3.5vh; font-weight: 800; }
+        .d-lbl { font-size: 1.2vh; text-transform: uppercase; opacity: 0.9; }
 
-        /* 4. PREVISIÓN (550px) */
+        /* --- 4. PREVISIÓN (35% Altura - Espacio Reservado) --- */
         .forecast-section {
-            height: 550px; padding-bottom: 60px; display: flex; flex-direction: column;
+            height: 35%; /* Altura garantizada para los 5 días */
+            background: rgba(0,0,0,0.6); 
+            padding: 3vh 4vh;
+            border-radius: 3vh;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; 
+            flex-direction: column;
         }
-        .f-title {
-            font-size: 30px; text-transform: uppercase; letter-spacing: 3px;
-            border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 20px; margin-bottom: 20px; opacity: 0.9;
+        .f-title { 
+            font-size: 2vh; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            border-bottom: 1px solid rgba(255,255,255,0.3); 
+            padding-bottom: 1.5vh; 
+            margin-bottom: 1vh; 
+            opacity: 0.9; 
         }
-        .f-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-        .f-row {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 40px; background: rgba(0,0,0,0.4); padding: 15px 30px; border-radius: 15px;
+        .f-list { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-evenly; /* Reparte el espacio equitativamente */
+            height: 100%; 
         }
-        .fr-day { width: 35%; font-weight: 500; text-transform: capitalize; }
-        .fr-icon { width: 20%; text-align: center; }
+        .f-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 2.2vh; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding: 0.5vh 0; 
+        }
+        .f-row:last-child { border-bottom: none; }
+        .fr-day { width: 35%; text-transform: capitalize; font-weight: 500; }
+        .fr-icon { width: 20%; text-align: center; font-size: 2.5vh; }
         .fr-temps { width: 45%; text-align: right; font-weight: 800; }
-        .min-t { font-weight: 300; opacity: 0.7; font-size: 0.8em; margin-left: 15px; }
+        .min-t { font-size: 0.8em; font-weight: 300; opacity: 0.7; margin-left: 10px; }
+
     </style>
 </head>
 <body>
 
-    <div id="app-container">
-        <div class="overlay"></div>
+    <div class="overlay"></div>
+
+    <div class="main-wrapper">
+        
         <header>
             <div class="title-group">
                 <h1>MEIRA</h1>
@@ -109,88 +187,125 @@
                 <div class="date" id="clock-date">...</div>
             </div>
         </header>
+
         <div class="hero-section">
-            <i class="fas fa-circle-notch fa-spin main-icon" id="main-icon"></i>
-            <div class="main-temp" id="main-temp">--°</div>
-            <div class="main-desc" id="main-desc">Conectando...</div>
+            <i class="fas fa-circle-notch fa-spin hero-icon" id="main-icon"></i>
+            <div class="hero-temp" id="main-temp">--°</div>
+            <div class="hero-desc" id="main-desc">Conectando...</div>
         </div>
+
         <div class="details-section">
-            <div class="d-box"><i class="fas fa-wind d-icon"></i><div class="d-val" id="val-wind">--</div><div class="d-lbl">Viento</div></div>
-            <div class="d-box"><i class="fas fa-tint d-icon"></i><div class="d-val" id="val-hum">--%</div><div class="d-lbl">Humedad</div></div>
-            <div class="d-box"><i class="fas fa-temperature-high d-icon"></i><div class="d-val" id="val-feel">--°</div><div class="d-lbl">Sensación</div></div>
+            <div class="d-box">
+                <i class="fas fa-wind d-icon"></i>
+                <div class="d-val" id="val-wind">--</div>
+                <div class="d-lbl">Viento</div>
+            </div>
+            <div class="d-box">
+                <i class="fas fa-tint d-icon"></i>
+                <div class="d-val" id="val-hum">--%</div>
+                <div class="d-lbl">Humedad</div>
+            </div>
+            <div class="d-box">
+                <i class="fas fa-temperature-high d-icon"></i>
+                <div class="d-val" id="val-feel">--°</div>
+                <div class="d-lbl">Sensación</div>
+            </div>
         </div>
+
         <div class="forecast-section">
             <div class="f-title">Próximos 5 Días</div>
-            <div class="f-list" id="forecast-target"></div>
+            <div class="f-list" id="forecast-target">
+                </div>
         </div>
+
     </div>
 
     <script>
-        // --- SCRIPT DE ESCALADO AUTOMÁTICO ---
-        function autoScale() {
-            const app = document.getElementById('app-container');
-            const winW = window.innerWidth;
-            const winH = window.innerHeight;
-            
-            // Calculamos cuánto tenemos que escalar para llenar el ancho
-            const scaleX = winW / 1080;
-            const scaleY = winH / 1920;
-            
-            // Usamos el menor de los dos para que quepa todo, o el X para forzar ancho
-            // En este caso, forzamos llenar el ancho para que no haya bordes negros
-            const scale = scaleX; 
-            
-            app.style.transform = `scale(${scale})`;
-            
-            // Ajustamos la altura del body para eliminar scroll si sobra un poco
-            document.body.style.height = (1920 * scale) + "px";
-        }
-        
-        window.addEventListener('resize', autoScale);
-        autoScale(); // Ejecutar al inicio
+        const LAT = 43.2132;
+        const LON = -7.2934;
 
-        // --- LÓGICA DEL TIEMPO ---
-        const LAT = 43.2132; const LON = -7.2934;
         function updateTime() {
             const now = new Date();
             document.getElementById('clock-time').innerText = now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
             let d = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
             document.getElementById('clock-date').innerText = d.charAt(0).toUpperCase() + d.slice(1);
         }
+
         async function initWeather() {
             try {
+                // API Open-Meteo (Gratis)
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
                 const res = await fetch(url);
                 const data = await res.json();
+
+                // Actual
                 const cur = data.current;
                 document.getElementById('main-temp').innerText = Math.round(cur.temperature_2m) + "°";
                 document.getElementById('val-wind').innerText = Math.round(cur.wind_speed_10m);
                 document.getElementById('val-hum').innerText = cur.relative_humidity_2m + "%";
                 document.getElementById('val-feel').innerText = Math.round(cur.apparent_temperature) + "°";
                 document.getElementById('main-desc').innerText = getWeatherDesc(cur.weather_code);
+                
                 const iconEl = document.getElementById('main-icon');
-                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} main-icon`;
+                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} hero-icon`;
                 iconEl.style.color = (cur.weather_code <= 1) ? '#ffcc00' : '#ffffff';
+
+                // Previsión 5 Días
                 let html = '';
                 const daily = data.daily;
                 for(let i=1; i<=5; i++) {
                     const date = new Date(daily.time[i]);
                     let dayName = date.toLocaleDateString('es-ES', {weekday:'long'});
                     dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                    
                     const code = daily.weather_code[i];
+                    const max = Math.round(daily.temperature_2m_max[i]);
+                    const min = Math.round(daily.temperature_2m_min[i]);
                     let iColor = (code === 0) ? '#ffcc00' : '#eee';
-                    html += `<div class="f-row"><div class="fr-day">${dayName}</div><div class="fr-icon"><i class="fas ${getWeatherIcon(code)}" style="color:${iColor}"></i></div><div class="fr-temps">${Math.round(daily.temperature_2m_max[i])}° <span class="min-t">${Math.round(daily.temperature_2m_min[i])}°</span></div></div>`;
+
+                    html += `
+                    <div class="f-row">
+                        <div class="fr-day">${dayName}</div>
+                        <div class="fr-icon"><i class="fas ${getWeatherIcon(code)}" style="color:${iColor}"></i></div>
+                        <div class="fr-temps">${max}° <span class="min-t">${min}°</span></div>
+                    </div>`;
                 }
                 document.getElementById('forecast-target').innerHTML = html;
+
             } catch(e) { console.error(e); }
         }
+
+        // Iconos corregidos (Sin nieve en chubascos)
         function getWeatherIcon(c) {
-            if(c===0) return 'fa-sun'; if(c>=1&&c<=3) return 'fa-cloud-sun'; if(c>=45&&c<=48) return 'fa-smog'; if(c>=51&&c<=67) return 'fa-cloud-rain'; if(c>=71&&c<=77) return 'fa-snowflake'; if(c>=80&&c<=82) return 'fa-umbrella'; if(c>=85&&c<=86) return 'fa-snowflake'; if(c>=95) return 'fa-bolt'; return 'fa-cloud';
+            if(c === 0) return 'fa-sun';
+            if(c >= 1 && c <= 3) return 'fa-cloud-sun';
+            if(c >= 45 && c <= 48) return 'fa-smog';
+            if(c >= 51 && c <= 67) return 'fa-cloud-rain';
+            if(c >= 71 && c <= 77) return 'fa-snowflake';
+            if(c >= 80 && c <= 82) return 'fa-umbrella'; // Lluvia fuerte, no nieve
+            if(c >= 85 && c <= 86) return 'fa-snowflake';
+            if(c >= 95) return 'fa-bolt';
+            return 'fa-cloud';
         }
+
         function getWeatherDesc(c) {
-            const m = {0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto", 45:"Niebla", 48:"Niebla escarcha", 51:"Llovizna", 53:"Llovizna", 55:"Llovizna", 61:"Lluvia", 63:"Lluvia", 65:"Lluvia fuerte", 71:"Nieve", 73:"Nieve", 75:"Nieve fuerte", 80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes", 85:"Nieve", 86:"Nieve fuerte", 95:"Tormenta", 96:"Tormenta con granizo", 99:"Tormenta fuerte"}; return m[c] || "Variable";
+            const m = {
+                0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto",
+                45:"Niebla", 48:"Escarcha",
+                51:"Llovizna", 53:"Llovizna", 55:"Llovizna",
+                61:"Lluvia", 63:"Lluvia", 65:"Lluvia fuerte",
+                71:"Nieve", 73:"Nieve", 75:"Nieve fuerte",
+                80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes",
+                85:"Nieve", 86:"Nieve fuerte",
+                95:"Tormenta", 96:"Tormenta con granizo", 99:"Tormenta fuerte"
+            };
+            return m[c] || "Variable";
         }
-        setInterval(updateTime, 1000); updateTime(); initWeather(); setInterval(initWeather, 900000);
+
+        setInterval(updateTime, 1000);
+        updateTime();
+        initWeather();
+        setInterval(initWeather, 900000); 
     </script>
 </body>
 </html>
