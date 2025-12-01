@@ -2,113 +2,113 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tiempo Bicos de Fio - Estructura Instagram</title>
+    <title>Tiempo Meira - 4K Resolution</title>
+    <style> * { box-sizing: border-box; margin: 0; padding: 0; } </style>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
 
     <style>
-        /* RESET IGUAL QUE INSTAGRAM */
-        * { box-sizing: border-box; }
-        
-        body { 
-            margin: 0; 
-            padding: 0; 
+        body {
+            /* --- NUEVA RESOLUCIÓN 4K --- */
             width: 2160px; 
-            height: 3840px; 
-            overflow: hidden; 
-            font-family: 'Outfit', sans-serif; 
-            color: #fff; 
+            height: 3840px;
+            /* --------------------------- */
+            overflow: hidden;
+            background-color: #000; font-family: 'Outfit', sans-serif; color: white;
+            margin: 0; padding: 0;
             
-            /* ESTRUCTURA FLEXBOX COLUMNA (Igual que Instagram) */
-            display: flex; 
-            flex-direction: column; 
-            
-            /* FONDO */
-            background-color: #222;
+            /* FONDO: Se adaptará automáticamente al 4K */
             background-image: url('fondo.jpg');
             background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center bottom;
+            background-size: cover; /* Clave para que llene el ancho */
+            background-position: center bottom; 
         }
 
-        /* CAPA OSCURA (Para que se lea bien) */
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.9) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.9) 100%);
             z-index: 0;
         }
 
-        /* --- ZONA 1: CABECERA (10% Alto) --- */
-        .zone-header {
-            position: relative; z-index: 1;
-            height: 10%; /* Porcentaje fijo */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 60px;
-            border-bottom: 2px solid rgba(255,255,255,0.2);
+        /* --- NUEVO CONTENEDOR ESCALADOR --- */
+        /* Este div envuelve el diseño original de 1080p y lo multiplica por 2 */
+        .content-scaler {
+            width: 1080px;
+            height: 1920px;
+            /* Escala x2 exacto */
+            transform: scale(2);
+            /* El punto de origen de la escala es la esquina superior izquierda */
+            transform-origin: top left;
+            position: relative;
+            z-index: 1;
         }
-        .title h1 { font-size: 60px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 2px; line-height: 1; }
-        .title p { font-size: 24px; margin: 5px 0 0; opacity: 0.9; font-weight: 300; }
-        .clock { text-align: right; }
-        .time { font-size: 60px; font-weight: 300; line-height: 1; }
-        .date { font-size: 20px; opacity: 0.8; margin-top: 5px; text-transform: uppercase; }
+        /* ------------------------------------ */
 
-        /* --- ZONA 2: HÉROE (35% Alto) --- */
-        .zone-hero {
-            position: relative; z-index: 1;
-            height: 35%; /* Porcentaje fijo */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .hero-icon { font-size: 160px; color: #ffcc00; filter: drop-shadow(0 0 30px rgba(255,204,0,0.4)); margin-bottom: 10px; }
-        .hero-temp { font-size: 240px; font-weight: 800; line-height: 0.8; text-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .hero-desc { font-size: 40px; font-weight: 300; margin-top: 20px; text-transform: capitalize; background: rgba(0,0,0,0.4); padding: 5px 30px; border-radius: 50px; }
+        /* A partir de aquí, el CSS es idéntico al diseño original de 1080p,
+           pero se verá el doble de grande gracias al 'content-scaler' */
 
-        /* --- ZONA 3: DETALLES (20% Alto) --- */
-        .zone-details {
-            position: relative; z-index: 1;
-            height: 20%; /* Porcentaje fijo */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 60px;
+        header, .hero-section, .details-section, .forecast-section {
+            position: relative; padding-left: 60px; padding-right: 60px;
         }
-        .d-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            width: 30%; height: 70%; /* Ocupan el 70% de la zona disponible */
-            border-radius: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
+
+        /* --- 1. CABECERA (220px) --- */
+        header {
+            height: 220px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            padding-top: 60px;
+        }
+        .title-group h1 { font-size: 80px; font-weight: 800; letter-spacing: 4px; line-height: 1; margin-bottom: 10px; text-transform: uppercase;}
+        .title-group p { font-size: 30px; font-weight: 300; opacity: 0.9; }
+        
+        .clock-group { text-align: right; }
+        .time { font-size: 90px; font-weight: 300; line-height: 1; }
+        .date { font-size: 26px; text-transform: uppercase; margin-top: 10px; font-weight: 500; opacity: 0.8; }
+
+        /* --- 2. HÉROE (Flexible) --- */
+        .hero-section {
+            /* Calculamos la altura restante flexible */
+            height: calc(1920px - 220px - 250px - 550px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .d-icon { font-size: 40px; margin-bottom: 10px; }
-        .d-val { font-size: 45px; font-weight: 800; }
-        .d-lbl { font-size: 18px; text-transform: uppercase; opacity: 0.8; margin-top: 5px; }
+        .main-icon { font-size: 220px; color: #ffcc00; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3)); margin-bottom: 20px; }
+        .main-temp { font-size: 320px; font-weight: 800; line-height: 0.9; text-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .main-desc { font-size: 50px; font-weight: 300; margin-top: 20px; text-transform: capitalize; background: rgba(0,0,0,0.3); padding: 10px 40px; border-radius: 50px; backdrop-filter: blur(5px); }
 
-        /* --- ZONA 4: PREVISIÓN (35% Alto - IGUAL QUE INFO ZONE DE INSTAGRAM) --- */
-        .zone-forecast {
-            position: relative; z-index: 1;
-            height: 35%; /* Porcentaje fijo */
-            background: rgba(0,0,0,0.6); /* Fondo oscuro para contraste */
-            padding: 40px 60px;
+        /* --- 3. DETALLES (250px) --- */
+        .details-section {
+            height: 250px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .d-box {
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px);
+            width: 30%; height: 180px; border-radius: 30px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .d-icon { font-size: 50px; margin-bottom: 10px; }
+        .d-val { font-size: 50px; font-weight: 800; }
+        .d-lbl { font-size: 20px; text-transform: uppercase; opacity: 0.8; margin-top: 5px; }
+
+        /* --- 4. PREVISIÓN (550px) --- */
+        .forecast-section {
+            height: 550px; padding-bottom: 60px;
             display: flex; flex-direction: column;
         }
-        .f-title { font-size: 28px; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 15px; margin-bottom: 10px; }
-        .f-list { 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-evenly; /* Repartir espacio sobrante */
-            height: 100%; 
+        .f-title {
+            font-size: 30px; text-transform: uppercase; letter-spacing: 3px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 20px; margin-bottom: 20px; opacity: 0.9;
         }
-        .f-row { display: flex; justify-content: space-between; align-items: center; font-size: 38px; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0; }
-        .f-row:last-child { border-bottom: none; }
-        .fr-day { width: 35%; text-transform: capitalize; font-weight: 500; }
+        .f-list { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .f-row {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 40px; background: rgba(0,0,0,0.4);
+            padding: 15px 30px; border-radius: 15px;
+        }
+        .fr-day { width: 35%; font-weight: 500; text-transform: capitalize; }
         .fr-icon { width: 20%; text-align: center; }
         .fr-temps { width: 45%; text-align: right; font-weight: 800; }
-        .low-t { font-size: 0.8em; font-weight: 300; opacity: 0.7; margin-left: 15px; }
+        .min-t { font-weight: 300; opacity: 0.7; font-size: 0.8em; margin-left: 15px; }
 
     </style>
 </head>
@@ -116,49 +116,50 @@
 
     <div class="overlay"></div>
 
-    <div class="zone-header">
-        <div class="title">
-            <h1>MEIRA</h1>
-            <p>Lugo, Galicia</p>
-        </div>
-        <div class="clock">
-            <div class="time" id="clock-time">00:00</div>
-            <div class="date" id="clock-date">...</div>
-        </div>
-    </div>
-
-    <div class="zone-hero">
-        <i class="fas fa-circle-notch fa-spin hero-icon" id="main-icon"></i>
-        <div class="hero-temp" id="main-temp">--°</div>
-        <div class="hero-desc" id="main-desc">Cargando...</div>
-    </div>
-
-    <div class="zone-details">
-        <div class="d-card">
-            <i class="fas fa-wind d-icon"></i>
-            <div class="d-val" id="val-wind">--</div>
-            <div class="d-lbl">Viento</div>
-        </div>
-        <div class="d-card">
-            <i class="fas fa-tint d-icon"></i>
-            <div class="d-val" id="val-hum">--%</div>
-            <div class="d-lbl">Humedad</div>
-        </div>
-        <div class="d-card">
-            <i class="fas fa-temperature-high d-icon"></i>
-            <div class="d-val" id="val-feel">--°</div>
-            <div class="d-lbl">Sensación</div>
-        </div>
-    </div>
-
-    <div class="zone-forecast">
-        <div class="f-title">Próximos 5 Días</div>
-        <div class="f-list" id="forecast-target">
+    <div class="content-scaler">
+        <header>
+            <div class="title-group">
+                <h1>MEIRA</h1>
+                <p>Lugo, Galicia</p>
             </div>
-    </div>
+            <div class="clock-group">
+                <div class="time" id="clock-time">00:00</div>
+                <div class="date" id="clock-date">...</div>
+            </div>
+        </header>
 
-    <script>
-        const LAT = 43.2132; 
+        <div class="hero-section">
+            <i class="fas fa-circle-notch fa-spin main-icon" id="main-icon"></i>
+            <div class="main-temp" id="main-temp">--°</div>
+            <div class="main-desc" id="main-desc">Conectando...</div>
+        </div>
+
+        <div class="details-section">
+            <div class="d-box">
+                <i class="fas fa-wind d-icon"></i>
+                <div class="d-val" id="val-wind">--</div>
+                <div class="d-lbl">Viento</div>
+            </div>
+            <div class="d-box">
+                <i class="fas fa-tint d-icon"></i>
+                <div class="d-val" id="val-hum">--%</div>
+                <div class="d-lbl">Humedad</div>
+            </div>
+            <div class="d-box">
+                <i class="fas fa-temperature-high d-icon"></i>
+                <div class="d-val" id="val-feel">--°</div>
+                <div class="d-lbl">Sensación</div>
+            </div>
+        </div>
+
+        <div class="forecast-section">
+            <div class="f-title">Próximos 5 Días</div>
+            <div class="f-list" id="forecast-target">
+                </div>
+        </div>
+    </div> <script>
+        // COORDENADAS MEIRA
+        const LAT = 43.2132;
         const LON = -7.2934;
 
         function updateTime() {
@@ -174,7 +175,7 @@
                 const res = await fetch(url);
                 const data = await res.json();
 
-                // Current
+                // CURRENT
                 const cur = data.current;
                 document.getElementById('main-temp').innerText = Math.round(cur.temperature_2m) + "°";
                 document.getElementById('val-wind').innerText = Math.round(cur.wind_speed_10m);
@@ -183,10 +184,10 @@
                 document.getElementById('main-desc').innerText = getWeatherDesc(cur.weather_code);
                 
                 const iconEl = document.getElementById('main-icon');
-                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} hero-icon`;
+                iconEl.className = `fas ${getWeatherIcon(cur.weather_code)} main-icon`;
                 iconEl.style.color = (cur.weather_code <= 1) ? '#ffcc00' : '#ffffff';
 
-                // Forecast
+                // FORECAST
                 let html = '';
                 const daily = data.daily;
                 for(let i=1; i<=5; i++) {
@@ -197,13 +198,14 @@
                     const code = daily.weather_code[i];
                     const max = Math.round(daily.temperature_2m_max[i]);
                     const min = Math.round(daily.temperature_2m_min[i]);
+                    
                     let iColor = (code === 0) ? '#ffcc00' : '#eee';
 
                     html += `
                     <div class="f-row">
                         <div class="fr-day">${dayName}</div>
                         <div class="fr-icon"><i class="fas ${getWeatherIcon(code)}" style="color:${iColor}"></i></div>
-                        <div class="fr-temps">${max}° <span class="low-t">${min}°</span></div>
+                        <div class="fr-temps">${max}° <span class="min-t">${min}°</span></div>
                     </div>`;
                 }
                 document.getElementById('forecast-target').innerHTML = html;
@@ -211,29 +213,27 @@
             } catch(e) { console.error(e); }
         }
 
-        // --- CORRECCIÓN DE ICONOS ---
-        // Ahora distinguimos "Lluvia Fuerte" (80-82) de "Nieve" (71-77, 85-86)
+        // --- CORRECCIÓN DE ICONOS (Incluye arreglos de nieve/lluvia) ---
         function getWeatherIcon(c) {
-            if(c === 0) return 'fa-sun';                       // Despejado
-            if(c >= 1 && c <= 3) return 'fa-cloud-sun';        // Nuboso
-            if(c >= 45 && c <= 48) return 'fa-smog';           // Niebla
-            if(c >= 51 && c <= 67) return 'fa-cloud-rain';     // Lluvia / Llovizna
-            if(c >= 71 && c <= 77) return 'fa-snowflake';      // Nieve Real
-            if(c >= 80 && c <= 82) return 'fa-umbrella';       // Chubascos de LLUVIA (Antes salía nieve aquí)
-            if(c >= 85 && c <= 86) return 'fa-snowflake';      // Chubascos de NIEVE
-            if(c >= 95) return 'fa-bolt';                      // Tormenta
+            if(c === 0) return 'fa-sun';
+            if(c >= 1 && c <= 3) return 'fa-cloud-sun';
+            if(c >= 45 && c <= 48) return 'fa-smog';
+            if(c >= 51 && c <= 67) return 'fa-cloud-rain';
+            if(c >= 71 && c <= 77) return 'fa-snowflake';
+            if(c >= 80 && c <= 82) return 'fa-umbrella'; // Chubascos Lluvia
+            if(c >= 85 && c <= 86) return 'fa-snowflake'; // Chubascos Nieve
+            if(c >= 95) return 'fa-bolt';
             return 'fa-cloud';
         }
 
         function getWeatherDesc(c) {
-            // Mapeo más preciso
             const m = {
                 0:"Despejado", 1:"Poco nuboso", 2:"Nublado", 3:"Cubierto",
                 45:"Niebla", 48:"Niebla escarcha",
                 51:"Llovizna", 53:"Llovizna", 55:"Llovizna",
                 61:"Lluvia", 63:"Lluvia", 65:"Lluvia fuerte",
                 71:"Nieve", 73:"Nieve", 75:"Nieve fuerte",
-                80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes", // Corregido
+                80:"Chubascos", 81:"Chubascos", 82:"Chubascos fuertes",
                 85:"Nieve", 86:"Nieve fuerte",
                 95:"Tormenta", 96:"Tormenta con granizo", 99:"Tormenta fuerte"
             };
@@ -243,7 +243,7 @@
         setInterval(updateTime, 1000);
         updateTime();
         initWeather();
-        setInterval(initWeather, 900000);
+        setInterval(initWeather, 900000); 
     </script>
 </body>
 </html>
